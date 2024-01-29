@@ -1,0 +1,7 @@
+{
+  "name": "TareaAprendizaje04-01",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
