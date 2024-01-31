@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-label>Tab5</ion-label>
+  <ion-toolbar>
+    <ion-segment scrollable [value] = "categorias[0]" (ionChange)="cambiarCategoria($event)" >
+    <ion-segment-button *ngFor="let item of categorias" [value]= "item">
+      <ion-label>{{item}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+    
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true">
+  <app-bar-chart *ngIf="categoriaElegida == 'bar-chart'"></app-bar-chart>
+  
+ 
+  <app-line-chart [nameTab]= "nameTab" *ngIf= "categoriaElegida =='line-chart'"></app-line-chart>
+  <app-pie-chart [nameTab]= "nameTab" *ngIf= "categoriaElegida =='pie-chart'"></app-pie-chart>
+
+  
+</ion-content>
