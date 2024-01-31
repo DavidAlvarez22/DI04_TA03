@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { Chart, ChartType } from 'chart.js/auto';
 
 @Component({
@@ -9,9 +9,9 @@ import { Chart, ChartType } from 'chart.js/auto';
 export class LineChartComponent  implements OnInit {
 
   public chart!: Chart;
+  @Input() nameTab: string = "";
 
-
-  constructor() { }
+  constructor(private el : ElementRef, private renderer : Renderer2) { }
 
   ngOnInit() {
     console.log("Ejecuta line-chart")
@@ -29,8 +29,26 @@ export class LineChartComponent  implements OnInit {
         tension: 0.1
       }]
     };
+
+    const div = this.renderer.createElement('div');
+    // Establecer alguna propiedad del div si es necesario
+    this.renderer.setStyle(div, 'width', '100%');
+    this.renderer.setStyle(div, 'height', '100%');
+    this.renderer.setStyle(div, 'margin', 'auto');
+    this.renderer.setStyle(div, 'text-align', 'center');
+    this.renderer.setAttribute(div, 'id', 'container'+this.nameTab+'BarChart');
+
     // Creamos la gráfica
-    this.chart = new Chart("lineChart", {
+    const canvas = this.renderer.createElement('canvas');
+    this.renderer.setAttribute(canvas, 'id', this.nameTab+'BarChart');
+
+    // Agregar el canvas al div
+    this.renderer.appendChild(div, canvas);
+    // Agregar el div al elemento actual del componente
+    this.renderer.appendChild(this.el.nativeElement, div);
+
+    // Creamos la gráfica
+    this.chart = new Chart(canvas, {
       type: 'line' as ChartType, // tipo de la gráfica 
       data: data, // datos 
       options: { // opciones de la gráfica

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Chart,ChartType } from 'chart.js/auto';
+import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { Chart,ChartType, elements } from 'chart.js/auto';
 
 @Component({
   selector: 'app-pie-chart',
@@ -9,8 +9,9 @@ import { Chart,ChartType } from 'chart.js/auto';
 export class PieChartComponent  implements OnInit {
 
   public chart !: Chart;
+  @Input() nameTab:string = "";
 
-  constructor() { }
+  constructor(private el : ElementRef,private renderer: Renderer2) { }
 
   ngOnInit() {
     this.inicializarChart();
@@ -31,9 +32,26 @@ export class PieChartComponent  implements OnInit {
         ]
       }]
     };
+
+    const div = this.renderer.createElement('div');
+    // Establecer alguna propiedad del div si es necesario
+    this.renderer.setStyle(div, 'width', '100%');
+    this.renderer.setStyle(div, 'height', '100%');
+    this.renderer.setStyle(div, 'margin', 'auto');
+    this.renderer.setStyle(div, 'text-align', 'center');
+    this.renderer.setAttribute(div, 'id', 'container'+this.nameTab+'BarChart');
+
+    // Creamos la gráfica
+    const canvas = this.renderer.createElement('canvas');
+    this.renderer.setAttribute(canvas, 'id', this.nameTab+'BarChart');
+
+    // Agregar el canvas al div
+    this.renderer.appendChild(div, canvas);
+    // Agregar el div al elemento actual del componente
+    this.renderer.appendChild(this.el.nativeElement, div);
  
      // Creamos la gráfica
-    this.chart = new Chart("pieChart", {
+    this.chart = new Chart(canvas, {
       type: 'pie' as ChartType, // tipo de la gráfica 
       data: data, // datos 
       options: { // opciones de la gráfica
